@@ -1,12 +1,13 @@
 <div class="payment-window">
+  <p>Your current Poké Tokens {{ currentCoins }}</p>
   <mat-form-field appearance="fill" floatLabel="always">
     <mat-label>Quantities</mat-label>
-    <input matInput type="number" class="example-right-align" placeholder="0" [(ngModel)]="model.quantities">
+    <input matInput type="number" class="example-right-align" placeholder="0" [(ngModel)]="model.quantities" (keyup)="$event.key==='Enter'?checkout():0">
     <span matPrefix>Poké Tokens&nbsp;</span>
   </mat-form-field>
   <div class="button-grp">
-    <button mat-raised-button color="warn" (click)="model.quantities=undefined">Reset</button>
-    <button mat-raised-button color="primary" (click)="checkout('/pay/create-checkout-session')">Checkout</button>
+    <button mat-raised-button color="warn" (click)="reset()">Reset</button>
+    <button mat-raised-button color="primary" (click)="checkout()">Checkout</button>
   </div>
 </div>
 

@@ -34,6 +34,7 @@ import { UserManagementService } from './services/user-management/user-managemen
 import { OAuth2Service } from './services/oauth2/oauth2.service';
 import { MessageBoxService } from './services/message-box/message-box.service';
 import { MessageBoxComponent } from './components/message-box/message-box.component';
+import { NotificationService } from './services/notification/notification.service';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,7 @@ import { MessageBoxComponent } from './components/message-box/message-box.compon
     MatBadgeModule,
     MatDividerModule,
   ],
-  providers: [UserManagementService, OAuth2Service, MessageBoxService],
+  providers: [UserManagementService, OAuth2Service, MessageBoxService, NotificationService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
