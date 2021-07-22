@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment as env } from 'src/environments/environment';
-import { UserManagementService } from './user-management.service';
+import { UserManagementService } from '../user-management/user-management.service';
 
 @Injectable({
   providedIn: 'root',

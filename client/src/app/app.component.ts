@@ -2,7 +2,7 @@ import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
-import { UserManagementService } from './services/user-management.service';
+import { UserManagementService } from './services/user-management/user-management.service';
 
 export interface MatDialogData {
   closeDialog: () => void;

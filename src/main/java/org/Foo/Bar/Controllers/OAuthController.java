@@ -40,8 +40,7 @@ public class OAuthController {
 
   @GetMapping("/auth/google_redirect")
   public String GoogleAuth(HttpServletRequest req, OkHttpClient client, Model model) throws IOException {
-    String baseurl = req.getScheme() + "://"
-        + (req.getRemoteHost().equals("127.0.0.1") ? "localhost" : req.getRemoteHost()) + ":" + req.getServerPort();
+    String baseurl = http.normalizeRemoteHost(req);
     Map<String, String> qsMap = qsParser.parse(req.getQueryString());
     String res = "";
     // TODO: use restTemplate insteat of okhttp3
@@ -69,8 +68,7 @@ public class OAuthController {
 
   @GetMapping("/auth/github_redirect")
   public String GitHubAuth(HttpServletRequest req, OkHttpClient client, Model model) throws IOException {
-    String baseurl = req.getScheme() + "://"
-        + (req.getRemoteHost().equals("127.0.0.1") ? "localhost" : req.getRemoteHost()) + ":" + req.getServerPort();
+    String baseurl = http.normalizeRemoteHost(req);
     Map<String, String> qsMap = qsParser.parse(req.getQueryString());
     String res = "";
     ObjectMapper objectMapper = new ObjectMapper();

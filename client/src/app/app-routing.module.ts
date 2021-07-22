@@ -7,6 +7,7 @@ import { UserDefaultComponent } from './components/user-dashboard/user-default/u
 import { FourOFourComponent } from './pages/four-ofour/four-ofour.component';
 import { HomeComponent } from './components/home/home.component';
 import { ShopComponent } from './components/shop/shop.component';
+import { PaymentComponent } from './modules/payment/payment.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,11 @@ const routes: Routes = [
   {
     path: 'shop',
     component: ShopComponent,
+  },
+  {
+    path: 'payment',
+    loadChildren: () =>
+      import('./modules/payment/payment.module').then((m) => m.PaymentModule),
   },
   {
     path: 'user',

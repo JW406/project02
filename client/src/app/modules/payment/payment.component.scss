@@ -1,0 +1,37 @@
+.example-right-align {
+  text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.example-right-align {
+  -moz-appearance: textfield;
+}
+
+.payment-window {
+  display: flex;
+  flex-direction: column;
+  width: 60vw;
+  margin: 3rem auto;
+}
+
+.button-grp {
+  display: flex;
+  justify-content: space-around;
+}
+
+.spinner {
+  background-color: #ccc;
+  opacity: 0.3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}

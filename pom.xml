@@ -16,6 +16,7 @@
     <javax.servlet.version>3.1.0</javax.servlet.version>
     <thymeleaf.version>3.0.12.RELEASE</thymeleaf.version>
     <junit.jupiter.version>5.4.0</junit.jupiter.version>
+    <stripe.version>20.62.0</stripe.version>
   </properties>
   <dependencies>
     <dependency>
@@ -107,6 +108,12 @@
       <version>${junit.jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.stripe</groupId>
+      <artifactId>stripe-java</artifactId>
+      <version>${stripe.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>

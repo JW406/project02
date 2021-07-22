@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Service;
 
 import okhttp3.Headers;
@@ -38,5 +40,10 @@ public class HTTPUtils {
     }
     res = res.substring(1);
     return res;
+  }
+
+  public String normalizeRemoteHost(HttpServletRequest req) {
+    return req.getScheme() + "://" + (req.getRemoteHost().equals("127.0.0.1") ? "localhost" : req.getRemoteHost()) + ":"
+        + req.getServerPort();
   }
 }

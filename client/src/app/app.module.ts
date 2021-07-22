@@ -14,6 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
 
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,8 +29,11 @@ import { UserDefaultComponent } from './components/user-dashboard/user-default/u
 import { UserProfileComponent } from './components/user-dashboard/user-profile/user-profile.component';
 import { UserSettingsComponent } from './components/user-dashboard/user-settings/user-settings.component';
 import { FourOFourComponent } from './pages/four-ofour/four-ofour.component';
-import { OAuth2Service } from './services/oauth2.service';
-import { UserManagementService } from './services/user-management.service';
+import { PaymentModule } from './modules/payment/payment.module';
+import { UserManagementService } from './services/user-management/user-management.service';
+import { OAuth2Service } from './services/oauth2/oauth2.service';
+import { MessageBoxService } from './services/message-box/message-box.service';
+import { MessageBoxComponent } from './components/message-box/message-box.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +47,7 @@ import { UserManagementService } from './services/user-management.service';
     LoginDialogComponent,
     HeaderComponent,
     ShopComponent,
+    MessageBoxComponent,
   ],
   imports: [
     HttpClientModule,
@@ -50,6 +55,7 @@ import { UserManagementService } from './services/user-management.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    PaymentModule,
     MatButtonModule,
     MatListModule,
     MatIconModule,
@@ -62,8 +68,9 @@ import { UserManagementService } from './services/user-management.service';
     MatSidenavModule,
     MatGridListModule,
     MatBadgeModule,
+    MatDividerModule,
   ],
-  providers: [UserManagementService, OAuth2Service],
+  providers: [UserManagementService, OAuth2Service, MessageBoxService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

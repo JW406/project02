@@ -1,0 +1,15 @@
+<div class="payment-window">
+  <mat-form-field appearance="fill" floatLabel="always">
+    <mat-label>Quantities</mat-label>
+    <input matInput type="number" class="example-right-align" placeholder="0" [(ngModel)]="model.quantities">
+    <span matPrefix>Poké Tokens&nbsp;</span>
+  </mat-form-field>
+  <div class="button-grp">
+    <button mat-raised-button color="warn" (click)="model.quantities=undefined">Reset</button>
+    <button mat-raised-button color="primary" (click)="checkout('/pay/create-checkout-session')">Checkout</button>
+  </div>
+</div>
+
+<div *ngIf="isWait" class="spinner">
+  <mat-spinner></mat-spinner>
+</div>

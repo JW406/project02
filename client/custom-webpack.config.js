@@ -1,12 +1,10 @@
 module.exports = {
   devServer: {
-    proxy: {
-      '/api': {
+    proxy: [
+      {
+        context: ['/api/**', '/auth/**', '/pay/**'],
         target: 'http://localhost:8080',
       },
-      '/auth': {
-        target: 'http://localhost:8080',
-      },
-    },
+    ],
   },
 }

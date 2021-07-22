@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialogData } from 'src/app/app.component';
-import { OAuth2Service } from 'src/app/services/oauth2.service';
+import { OAuth2Service } from 'src/app/services/oauth2/oauth2.service';
 
 const googleLogoURL =
   'https://raw.githubusercontent.com/fireflysemantics/logo/master/Google.svg';

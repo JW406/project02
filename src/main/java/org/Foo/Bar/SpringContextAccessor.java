@@ -14,11 +14,13 @@ public class SpringContextAccessor implements ApplicationContextAware {
   final public static String googleClientSecret;
   final public static String githubClientID;
   final public static String githubClientSecret;
+  final public static String stripeClientSecret;
   static {
     googleClientID = System.getenv("proj02_google_client_id");
     googleClientSecret = System.getenv("proj02_google_client_secret");
     githubClientID = System.getenv("proj02_github_client_id");
     githubClientSecret = System.getenv("proj02_github_client_secret");
+    stripeClientSecret = System.getenv("proj02_stripe_client_secret");
   }
 
   @Override
