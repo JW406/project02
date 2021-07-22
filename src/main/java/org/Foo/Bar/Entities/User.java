@@ -29,6 +29,16 @@ public class User {
   private String email;
   @Column
   private String name;
+  @Column
+  private Long pokeToken;
+
+  public Long getPokeToken() {
+    return pokeToken;
+  }
+
+  public void setPokeToken(Long pokeToken) {
+    this.pokeToken = pokeToken;
+  }
 
   public Integer getId() {
     return id;

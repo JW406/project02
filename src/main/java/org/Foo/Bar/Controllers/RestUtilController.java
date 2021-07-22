@@ -30,4 +30,12 @@ public class RestUtilController {
     sess.close();
     return a;
   }
+
+  @GetMapping("/api/user/tokens")
+  public Map<Object, Object> userTokenQuery() {
+    return new HashMap<Object, Object>(){{
+      put("email", "b");
+      put("pokeToken", 123);
+    }};
+  }
 }
