@@ -18,6 +18,8 @@
         proj02_google_client_secret
         proj02_github_client_id
         proj02_github_client_secret
+        proj02_stripe_client_id
+        proj02_stripe_client_secret
         rds_url
         rds_username
         rds_pwd
@@ -28,6 +30,7 @@
   <jpa:repositories base-package="org.Foo.Bar.EntitiesDao" />
 
   <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+  <!-- <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver"> -->
     <property name="prefix" value="/WEB-INF/templates/" />
     <property name="suffix" value=".html" />
     <property name="templateMode" value="HTML5" />

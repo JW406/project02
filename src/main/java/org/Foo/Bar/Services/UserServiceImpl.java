@@ -13,9 +13,12 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void persistUser(User user) {
+  public Integer persistUser(User user) {
+    Integer res = null;
     if (userDao.findByEmail(user.getEmail()) == null) {
-      userDao.save(user);
+      User u = userDao.save(user);
+      res = u.getId();
     }
+    return res;
   }
 }
