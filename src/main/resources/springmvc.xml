@@ -30,7 +30,6 @@
   <jpa:repositories base-package="org.Foo.Bar.EntitiesDao" />
 
   <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-  <!-- <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver"> -->
     <property name="prefix" value="/WEB-INF/templates/" />
     <property name="suffix" value=".html" />
     <property name="templateMode" value="HTML5" />
@@ -97,7 +96,6 @@
 
   <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
     <property name="showSql" value="${hibernate.show_sql}" />
-    <!-- <property name="generateDdl" value="${hibernate.hbm2ddl.auto:}" /> -->
     <property name="databasePlatform" value="${hibernate.dialect}" />
   </bean>
 
