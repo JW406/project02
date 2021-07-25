@@ -1,1 +1,2 @@
 select * from proj02_User;
+select * from proj02_PokemonItem;

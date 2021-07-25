@@ -36,6 +36,7 @@ import { MessageBoxService } from './services/message-box/message-box.service';
 import { MessageBoxComponent } from './components/message-box/message-box.component';
 import { NotificationService } from './services/notification/notification.service';
 import { JWTTokenHeaderInjector } from './apiInjectors/JWTTokenHeaderInjector';
+import { CardItemComponent } from './components/card-item/card-item.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { JWTTokenHeaderInjector } from './apiInjectors/JWTTokenHeaderInjector';
     HeaderComponent,
     ShopComponent,
     MessageBoxComponent,
+    CardItemComponent,
   ],
   imports: [
     HttpClientModule,

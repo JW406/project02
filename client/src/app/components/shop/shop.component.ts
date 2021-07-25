@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
+
+export interface ItemModel {
+  pokeName: string;
+  price: number;
+  img: string;
+}
 
 export interface Tile {
   color: string;
   cols: number;
   rows: number;
-  text: string;
+  data: ItemModel;
 }
 
 @Component({
@@ -13,13 +20,18 @@ export interface Tile {
   styleUrls: ['./shop.component.scss'],
 })
 export class ShopComponent implements OnInit {
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 1, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 2, color: 'lightgreen' },
-    { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
-    { text: 'Four', cols: 2, rows: 1, color: '#DDBDF1' },
-  ];
-  constructor() {}
+  tiles: Tile[] = [];
+  private colors = ['lightblue', 'lightgreen', 'lightpink', '#DDBDF1'];
+  constructor(private pokemonService: PokemonService) {}
 
-  ngOnInit(): void {}
+  async ngOnInit() {
+    const res = await this.pokemonService.getAllPokemons();
+    this.tiles = res.map((d) => ({
+      color: this.colors[Math.floor(Math.random() * this.colors.length)],
+      cols: 1,
+      rows: 5,
+      data: d,
+    }));
+    console.log(this.tiles)
+  }
 }

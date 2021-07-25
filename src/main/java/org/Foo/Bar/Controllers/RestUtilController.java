@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.Foo.Bar.Entities.User;
+import org.Foo.Bar.EntitiesDao.PokeItemDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
 import org.Foo.Bar.Security.TokenManager;
 import org.hibernate.Session;
@@ -19,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RestUtilController {
   @Autowired
   private SessionFactory sessionFactory;
-
   @Autowired
   private UserDao userDao;
-
+  @Autowired
+  private PokeItemDao pokeItemDao;
   @Autowired
   private TokenManager tokenManager;
 
@@ -51,5 +52,10 @@ public class RestUtilController {
         put("pokeToken", tokens);
       }
     };
+  }
+
+  @GetMapping("/api/shop/get-all-pokemons")
+  public List<?> getAllPokemons() {
+    return pokeItemDao.findAll();
   }
 }

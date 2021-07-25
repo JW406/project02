@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Random;
 
+import org.Foo.Bar.Entities.PokemonItem;
 import org.Foo.Bar.Entities.User;
+import org.Foo.Bar.EntitiesDao.PokeItemDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
 import org.Foo.Bar.Services.UserService;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,8 @@ public class TestEntitesDao {
   private UserService userService;
   @Autowired
   private UserDao userDao;
+  @Autowired
+  private PokeItemDao pokeItemDao;
 
   @Test
   public void testPersistUser() {
@@ -52,5 +56,14 @@ public class TestEntitesDao {
     user.setPokeToken(0L);
     user = userDao.save(user);
     return user;
+  }
+
+  @Test
+  public void testInsertOnePokeItem() {
+    PokemonItem pokemonItem = new PokemonItem();
+    pokemonItem.setPokeName("helloooo");
+    pokemonItem = pokeItemDao.save(pokemonItem);
+    assertNotNull(pokemonItem);
+    pokeItemDao.deleteById(pokemonItem.getId());
   }
 }

@@ -76,6 +76,8 @@ public class PaymentController {
         .addLineItem(item) //
         .build();
 
+    // TODO: avoid session and look for other solutions. The goal to to share some
+    // states among different server end points.
     req.getSession().setAttribute("pokeToken", param.getQuantities());
     Session session = Session.create(params);
     return "redirect:" + session.getUrl();

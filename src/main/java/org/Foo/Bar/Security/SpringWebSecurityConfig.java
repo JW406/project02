@@ -43,6 +43,8 @@ public class SpringWebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.csrf().disable().authorizeRequests() //
+        .antMatchers("/api/shop/**") //
+        .permitAll() //
         .antMatchers("/api/**") //
         .authenticated() //
         .antMatchers("/pay/create-checkout-session") //

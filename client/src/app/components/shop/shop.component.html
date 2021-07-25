@@ -4,6 +4,7 @@
       [colspan]="tile.cols"
       [rowspan]="tile.rows"
       [style.background]="tile.color">
-    {{tile.text}}
+    <app-card-item [title]="tile.data.pokeName" [price]="tile.data.price" [img]="tile.data.img">
+    </app-card-item>
   </mat-grid-tile>
 </mat-grid-list>
