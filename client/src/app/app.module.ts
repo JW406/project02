@@ -38,6 +38,7 @@ import { MessageBoxComponent } from './components/message-box/message-box.compon
 import { NotificationService } from './services/notification/notification.service';
 import { JWTTokenHeaderInjector } from './apiInjectors/JWTTokenHeaderInjector';
 import { CardItemComponent } from './components/card-item/card-item.component';
+import { CartItemComponent } from './components/cart-item/cart-item.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { CardItemComponent } from './components/card-item/card-item.component';
     ShopComponent,
     MessageBoxComponent,
     CardItemComponent,
+    CartItemComponent,
   ],
   imports: [
     HttpClientModule,

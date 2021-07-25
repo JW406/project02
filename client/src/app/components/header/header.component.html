@@ -6,12 +6,33 @@
     <a mat-button class="mr-5" [routerLink]="['/shop']">Shop</a>
   </div>
   <div>
-    <button *ngIf="um.loggedInUser.username" mat-raised-button color="primary"
-      [matBadge]="notificationService.currentNotificationNumber || undefined" matBadgePosition="before"
-      matBadgeColor="accent" [matMenuTriggerFor]="noficatiton" (click)="notificationService.readAll()">
-      Notifications
-    </button>
-    <mat-menu #noficatiton="matMenu" matMenuTriggerRestoreFocus>
+    <div *ngIf="um.loggedInUser.username">
+      <button mat-raised-button color="primary" [matBadge]="notificationService.currentNotificationNumber || undefined"
+        matBadgePosition="before" matBadgeColor="accent" [matMenuTriggerFor]="noficatiton"
+        (click)="notificationService.readAll()">
+        Notifications
+      </button>
+      <button mat-raised-button color="primary" [matMenuTriggerFor]="cart" style="margin-left: 1rem;">
+        Cart
+      </button>
+    </div>
+    <mat-menu #cart="matMenu">
+      <div *ngIf="!cs.cart.items.length;else other1" style="box-sizing: border-box;padding: 0 2rem;">
+        Your cart is empty!
+      </div>
+      <ng-template #other1>
+        <div style="padding: 0 1rem;">
+          <app-cart-item *ngFor="let item of cs.cart.items" [title]="item.name" [price]="item.price"
+            [quantities]="item.quantities" [img]="item.photo">
+          </app-cart-item>
+          <div style="text-align: right;">Your total: {{ cs.total }}&nbsp;Poké Token</div>
+          <button mat-raised-button color="primary" style="width: 100%;" (click)="checkout($event)">
+            Checkout
+          </button>
+        </div>
+      </ng-template>
+    </mat-menu>
+    <mat-menu #noficatiton="matMenu">
       <button mat-menu-item *ngIf="!notificationService.listOfNotifications.length;else other">
         Nothing here...
       </button>
@@ -25,7 +46,7 @@
             <div *ngFor="let b of item.body" style="line-height: 22px;"> {{ b }} </div>
             <mat-divider></mat-divider>
             <div style="line-height: 22px;">{{ item.date | date }}</div>
-            </mat-card-content>
+          </mat-card-content>
         </button>
       </ng-template>
     </mat-menu>

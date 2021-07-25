@@ -1,0 +1,14 @@
+.cart-item {
+  height: 6rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  .photo {
+    height: 4rem;
+    width: 5rem;
+    margin-right: 2rem;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 190%;
+  }
+}

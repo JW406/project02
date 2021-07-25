@@ -1,0 +1,15 @@
+<div class="cart-item">
+  <div class="photo" [style.backgroundImage]="_img"></div>
+  <div>
+    <div class="title">{{ title }}</div>
+    <div class="quantities">
+      <span>Qty.&nbsp;{{ quantities }}</span>
+      <span>&nbsp;x&nbsp;</span>
+      <span>{{ price }} Poké Token</span>
+    </div>
+    <div>
+      <button mat-raised-button color="warn" (click)="quantityChange($event, 1)"> ↑ </button>
+      <button mat-raised-button color="warn" (click)="quantityChange($event, -1)"> ↓ </button>
+    </div>
+  </div>
+</div>

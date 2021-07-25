@@ -1,3 +1,5 @@
+import { CartService } from '../cart/cart.service';
+
 export class UserManagementService {
   loggedInUser = {
     username: '',
@@ -28,6 +30,7 @@ export class UserManagementService {
     localStorage.removeItem('authType');
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('notificaitonList');
+    localStorage.removeItem(CartService.CARTKEY);
     this.setUsername('');
     window.location.href = '/'
   }
