@@ -22,16 +22,3 @@ input.example-right-align {
   display: flex;
   justify-content: space-around;
 }
-
-.spinner {
-  background-color: #ccc;
-  opacity: 0.3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-}

@@ -21,10 +21,12 @@ export interface Tile {
 })
 export class ShopComponent implements OnInit {
   tiles: Tile[] = [];
+  isWait = false;
   private colors = ['lightblue', 'lightgreen', 'lightpink', '#DDBDF1'];
   constructor(private pokemonService: PokemonService) {}
 
   async ngOnInit() {
+    this.isWait = true;
     const res = await this.pokemonService.getAllPokemons();
     this.tiles = res.map((d) => ({
       color: this.colors[Math.floor(Math.random() * this.colors.length)],
@@ -32,5 +34,6 @@ export class ShopComponent implements OnInit {
       rows: 5,
       data: d,
     }));
+    this.isWait = false;
   }
 }
