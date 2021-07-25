@@ -4,12 +4,14 @@ export interface Notification {
   title: string;
   body: string[];
   date: number;
+  isRead: boolean;
 }
 
 @Injectable()
 export class NotificationService {
-  private _currentNotificationNumber = 0;
-  private _listOfNotifications: Notification[] = [];
+  private NOTIFICATIONTAG = 'notificaitonList'
+  private _listOfNotifications: Notification[] = JSON.parse(localStorage.getItem(this.NOTIFICATIONTAG) || '[]');
+  private _currentNotificationNumber = this._listOfNotifications.reduce((prev, curr) => +(!curr.isRead) + prev, 0);
 
   constructor() {}
 
@@ -28,6 +30,15 @@ export class NotificationService {
   }
 
   set listOfNotifications(newListOfNotifications: Notification[]) {
+    localStorage.setItem(this.NOTIFICATIONTAG, JSON.stringify(newListOfNotifications))
     this._listOfNotifications = newListOfNotifications;
+  }
+
+  readAll = () => {
+    this.listOfNotifications = this._listOfNotifications.map((item) => {
+      item.isRead = true;
+      return item;
+    });
+    this._currentNotificationNumber = 0;
   }
 }

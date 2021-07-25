@@ -1,18 +1,19 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PaymentComponent } from './payment.component';
-import { PaymentRoutingModule } from './payment-routing.module';
-
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
-import { FormsModule } from '@angular/forms';
+import { JWTTokenHeaderInjector } from 'src/app/apiInjectors/JWTTokenHeaderInjector';
+import { PaymentRoutingModule } from './payment-routing.module';
+import { PaymentComponent } from './payment.component';
 import { StripeService } from './services/stripe.service';
-import { HttpClientModule } from '@angular/common/http';
+
+
 
 @NgModule({
   declarations: [PaymentComponent],
@@ -28,7 +29,14 @@ import { HttpClientModule } from '@angular/common/http';
     MatDialogModule,
     MatProgressSpinnerModule,
   ],
-  providers: [StripeService],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JWTTokenHeaderInjector,
+      multi: true,
+    },
+    StripeService,
+  ],
   exports: [PaymentComponent],
 })
 export class PaymentModule {}

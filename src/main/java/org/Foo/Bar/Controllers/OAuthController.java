@@ -1,6 +1,7 @@
 package org.Foo.Bar.Controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.Foo.Bar.SpringContextAccessor;
 import org.Foo.Bar.Entities.User;
 import org.Foo.Bar.RestObjects.GitHubAccessToken;
 import org.Foo.Bar.RestObjects.GoogleAccessToken;
+import org.Foo.Bar.Security.TokenManager;
 import org.Foo.Bar.Services.UserService;
 import org.Foo.Bar.UtilityServices.HTTPUtils;
 import org.Foo.Bar.UtilityServices.QueryStringParser;
@@ -30,12 +32,14 @@ public class OAuthController {
   private QueryStringParser qsParser;
   private HTTPUtils http;
   private UserService userService;
+  private TokenManager tokenManager;
 
   @Autowired
-  public OAuthController(QueryStringParser parser, HTTPUtils http, UserService userService) {
+  public OAuthController(QueryStringParser parser, HTTPUtils http, UserService userService, TokenManager tokenManager) {
     this.qsParser = parser;
     this.http = http;
     this.userService = userService;
+    this.tokenManager = tokenManager;
   }
 
   @GetMapping("/auth/google_redirect")
@@ -96,13 +100,25 @@ public class OAuthController {
 
   @ResponseBody
   @PostMapping("/auth/google_redirect_persist")
-  public void GoogleUserPersist(@RequestBody User user) {
+  public Map<Object, Object> GoogleUserPersist(@RequestBody User user) {
     userService.persistUser(user);
+    String token = tokenManager.generateJwtToken(new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()));
+    return new HashMap<Object, Object>() {
+      {
+        put("token", token);
+      }
+    };
   }
 
   @ResponseBody
   @PostMapping("/auth/github_redirect_persist")
-  public void GitHubUserPersist(@RequestBody User user) {
+  public Map<Object, Object> GitHubUserPersist(@RequestBody User user) {
     userService.persistUser(user);
+    String token = tokenManager.generateJwtToken(new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()));
+    return new HashMap<Object, Object>() {
+      {
+        put("token", token);
+      }
+    };
   }
 }

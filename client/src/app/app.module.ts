@@ -1,4 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -35,6 +35,7 @@ import { OAuth2Service } from './services/oauth2/oauth2.service';
 import { MessageBoxService } from './services/message-box/message-box.service';
 import { MessageBoxComponent } from './components/message-box/message-box.component';
 import { NotificationService } from './services/notification/notification.service';
+import { JWTTokenHeaderInjector } from './apiInjectors/JWTTokenHeaderInjector';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,13 @@ import { NotificationService } from './services/notification/notification.servic
     MatBadgeModule,
     MatDividerModule,
   ],
-  providers: [UserManagementService, OAuth2Service, MessageBoxService, NotificationService],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JWTTokenHeaderInjector, multi: true },
+    UserManagementService,
+    OAuth2Service,
+    MessageBoxService,
+    NotificationService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

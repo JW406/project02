@@ -16,7 +16,7 @@
         localStorage.setItem('__flag', 'true')
         const userInfo = JSON.parse(userInfoText)
         ;(async () => {
-          await fetch('/auth/google_redirect_persist', {
+          const resp = await fetch('/auth/google_redirect_persist', {
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
@@ -26,6 +26,8 @@
               email: userInfo['email'],
             })
           })
+          const jwtToken = (await resp.json())['token']
+          localStorage.setItem('jwtToken', jwtToken)
           setTimeout(() => window.close(), 0)
         })()
       } else {
@@ -47,7 +49,7 @@
           localStorage.setItem('userInfo', userInfoText)
           localStorage.setItem('__flag', 'true')
           const userInfo = JSON.parse(userInfoText)
-          await fetch('/auth/github_redirect_persist', {
+          const resp = await fetch('/auth/github_redirect_persist', {
             method: 'post',
             headers: {
               'Content-Type': 'application/json',
@@ -57,6 +59,8 @@
               email: userInfo['email'] || userInfo['url'],
             })
           })
+          const jwtToken = (await resp.json())['token']
+          localStorage.setItem('jwtToken', jwtToken)
           setTimeout(() => window.close(), 0)
         })()
       } else {

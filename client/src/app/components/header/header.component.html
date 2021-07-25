@@ -8,8 +8,8 @@
   <div>
     <button *ngIf="um.loggedInUser.username" mat-raised-button color="primary"
       [matBadge]="notificationService.currentNotificationNumber || undefined" matBadgePosition="before"
-      matBadgeColor="accent" [matMenuTriggerFor]="noficatiton" (click)="notificationService.currentNotificationNumber=notificationService.currentNotificationNumber-1">
-      Notications
+      matBadgeColor="accent" [matMenuTriggerFor]="noficatiton" (click)="notificationService.readAll()">
+      Notifications
     </button>
     <mat-menu #noficatiton="matMenu" matMenuTriggerRestoreFocus>
       <button mat-menu-item *ngIf="!notificationService.listOfNotifications.length;else other">

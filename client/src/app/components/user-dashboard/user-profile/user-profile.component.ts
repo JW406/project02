@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -6,13 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent implements OnInit {
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   data = '';
 
   ngOnInit(): void {
-    fetch('/api/foo')
-      .then((d) => d.json())
-      .then((d) => (this.data = d));
+    this.http.get('/api/foo').subscribe((d: any) => {
+      this.data = d;
+    });
   }
 }

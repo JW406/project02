@@ -7,8 +7,20 @@
 
 <body>
   <script>
-    localStorage.setItem('__flag', 'true')
-    setTimeout(() => window.close(), 0)
+    ;(async () => {
+      const jwtToken = localStorage.getItem('jwtToken')
+      if (jwtToken != null) {
+        await fetch('/pay/success-hook', {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`
+          }
+        })
+        localStorage.setItem('__flag', 'true')
+      } else {
+        localStorage.setItem('__flag', 'false')
+      }
+      setTimeout(() => window.close(), 0)
+    })()
   </script>
 </body>
 

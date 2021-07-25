@@ -26,6 +26,7 @@ export class UserManagementService {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('access_token');
     localStorage.removeItem('authType');
+    localStorage.removeItem('jwtToken');
     this.setUsername('');
   }
 }

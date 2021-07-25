@@ -1,5 +1,6 @@
 package org.Foo.Bar;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -31,5 +32,25 @@ public class TestEntitesDao {
     userDao.deleteById(id);
     foundUser = userDao.findByEmail(user.getEmail());
     assertNull(foundUser);
+  }
+
+  @Test
+  public void testCreditTokensToUser() {
+    User user = newUser();
+    Long amntToCredit = 222L;
+    userDao.updateUserToken(amntToCredit, user.getEmail());
+    User u = userDao.findByEmail(user.getEmail());
+    assertEquals(u.getPokeToken(), amntToCredit);
+    userDao.deleteById(u.getId());
+    assertNull(userDao.findByEmail(user.getEmail()));
+  }
+
+  public User newUser() {
+    User user = new User();
+    user.setEmail("hello@world.com" + new Random().nextInt(5555));
+    user.setName("bar");
+    user.setPokeToken(0L);
+    user = userDao.save(user);
+    return user;
   }
 }

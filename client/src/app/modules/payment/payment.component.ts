@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MessageBoxService } from 'src/app/services/message-box/message-box.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 
@@ -14,7 +15,7 @@ export interface MatDialogData {
   styleUrls: ['./payment.component.scss'],
 })
 export class PaymentComponent implements OnInit {
-  model: Record<any, string | number | undefined> = {
+  model: Record<string, any> = {
     amount: 100, // $1 each
     quantities: undefined,
     itemName: 'Poke Coins',
@@ -60,15 +61,19 @@ export class PaymentComponent implements OnInit {
           this.mb.show('Success');
           const amount = this.model['amount'] as number;
           const quantities = this.model['quantities'] as number;
-          this.notificationService.listOfNotifications.push({
-            title: 'Transaction complete',
-            body: [
-              `You have purchased ${this.model['quantities']} Poké Tokens`,
-              `for \$${(amount * quantities) / 100}`,
-            ],
-            date: new Date().getTime(),
-          });
+          this.notificationService.listOfNotifications = this.notificationService.listOfNotifications.concat(
+            {
+              title: 'Transaction complete',
+              body: [
+                `You have purchased ${this.model['quantities']} Poké Tokens`,
+                `for \$${(amount * quantities) / 100}`,
+              ],
+              date: new Date().getTime(),
+              isRead: false,
+            }
+          );
           ++this.notificationService.currentNotificationNumber;
+          this.currentCoins! += this.model.quantities as number;
           this.reset();
         } else if (flag === 'false') {
           this.mb.show('Failed');

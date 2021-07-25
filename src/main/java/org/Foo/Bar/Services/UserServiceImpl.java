@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
   public Integer persistUser(User user) {
     Integer res = null;
     if (userDao.findByEmail(user.getEmail()) == null) {
+      user.setPokeToken(0L);
       User u = userDao.save(user);
       res = u.getId();
     }
