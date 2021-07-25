@@ -1,5 +1,7 @@
 package org.Foo.Bar.Entities;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,8 +38,14 @@ public class User {
 
   @Column(unique = true)
   private String email;
+
   @Column
   private String name;
+
   @Column
   private Long pokeToken;
+
+  @Column(name = "ts_date_registered")
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date tsDateRegistered;
 }
