@@ -29,3 +29,22 @@ a {
   margin: 1.5rem auto;
   max-width: 75vw;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(25, 118, 210, 0.3);
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+  box-shadow: inset 0 0 6px rgba(25, 118, 210, 0.9);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #eee;
+}

@@ -4,10 +4,16 @@ import {
   HttpHandler,
   HttpRequest,
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { UserManagementService } from '../services/user-management/user-management.service';
 
+@Injectable()
 export class JWTTokenHeaderInjector implements HttpInterceptor {
   private interceptedUrls = ['/api', '/pay'];
+
+  constructor(private um: UserManagementService) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -21,7 +27,16 @@ export class JWTTokenHeaderInjector implements HttpInterceptor {
             Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
           },
         });
-        return next.handle(resetReq);
+        return next.handle(resetReq).pipe(
+          tap(
+            (e: any) => {
+              if (e.body?.isSuccess === 'false') {
+                this.um.logout();
+              }
+            },
+            () => {}
+          )
+        );
       }
     }
     return next.handle(req);

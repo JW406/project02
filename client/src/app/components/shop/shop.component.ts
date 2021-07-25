@@ -32,6 +32,5 @@ export class ShopComponent implements OnInit {
       rows: 5,
       data: d,
     }));
-    console.log(this.tiles)
   }
 }
