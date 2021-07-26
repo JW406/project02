@@ -23,13 +23,18 @@ export class NotificationService {
     return this._listOfNotifications;
   }
 
-  set currentNotificationNumber(newCurrentNotificationNumber: number) {
+  private setCurrentNotificationNumber(newCurrentNotificationNumber: number) {
     if (newCurrentNotificationNumber >= 0) {
       this._currentNotificationNumber = newCurrentNotificationNumber;
     }
   }
 
   set listOfNotifications(newListOfNotifications: Notification[]) {
+    this.setCurrentNotificationNumber(
+      newListOfNotifications.reduce((prev, curr) => {
+        return prev + +!curr.isRead;
+      }, 0)
+    );
     localStorage.setItem(this.NOTIFICATIONTAG, JSON.stringify(newListOfNotifications))
     this._listOfNotifications = newListOfNotifications;
   }

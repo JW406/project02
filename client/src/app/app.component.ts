@@ -2,6 +2,7 @@ import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LoginDialogComponent } from './components/login-dialog/login-dialog.component';
+import { LoadingSpinnerService } from './services/loading-spinner/loading-spinner.service';
 import { UserManagementService } from './services/user-management/user-management.service';
 
 export interface MatDialogData {
@@ -16,7 +17,11 @@ export interface MatDialogData {
 export class AppComponent implements OnInit, MatDialogData {
   matDialogref: MatDialogRef<LoginDialogComponent> | null = null;
 
-  constructor(private dialog: MatDialog, public um: UserManagementService) {}
+  constructor(
+    private dialog: MatDialog,
+    public um: UserManagementService,
+    public ls: LoadingSpinnerService
+  ) {}
 
   ngOnInit(): void {
     this.um.initSync();

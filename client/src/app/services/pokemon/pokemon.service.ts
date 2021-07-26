@@ -10,4 +10,8 @@ export class PokemonService {
   getAllPokemons() {
     return this.http.get('/api/shop/get-all-pokemons').toPromise() as Promise<any[]>
   }
+
+  getCurrentPokeToken() {
+    return this.http.get('/api/user/tokens').toPromise() as Promise<{pokeToken: number}>
+  }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoadingSpinnerService } from 'src/app/services/loading-spinner/loading-spinner.service';
 import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
 
 export interface ItemModel {
@@ -21,12 +22,14 @@ export interface Tile {
 })
 export class ShopComponent implements OnInit {
   tiles: Tile[] = [];
-  isWait = false;
   private colors = ['lightblue', 'lightgreen', 'lightpink', '#DDBDF1'];
-  constructor(private pokemonService: PokemonService) {}
+  constructor(
+    private pokemonService: PokemonService,
+    public ls: LoadingSpinnerService
+  ) {}
 
   async ngOnInit() {
-    this.isWait = true;
+    this.ls.isWait = true;
     const res = await this.pokemonService.getAllPokemons();
     this.tiles = res.map((d) => ({
       color: this.colors[Math.floor(Math.random() * this.colors.length)],
@@ -34,6 +37,6 @@ export class ShopComponent implements OnInit {
       rows: 5,
       data: d,
     }));
-    this.isWait = false;
+    this.ls.isWait = false;
   }
 }

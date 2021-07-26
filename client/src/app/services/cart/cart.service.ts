@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+import { ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 export interface Cart {
-  items: CartItem[]
+  items: CartItem[];
 }
 
 export interface Item {
@@ -19,15 +20,13 @@ export interface CartItem extends Item {
 })
 export class CartService {
   public static CARTKEY = 'POKECART';
-  private _cart: Cart;
+  private _cart!: Cart;
 
   constructor() {
     try {
       this._cart = JSON.parse(localStorage.getItem(CartService.CARTKEY) || '');
     } catch (error) {
-      this._cart = {
-        items: [],
-      };
+      this.emptyCart();
     }
   }
 
@@ -40,7 +39,7 @@ export class CartService {
   }
 
   addItemToCart(item: Item) {
-    const existingCartItem = this._cart.items.find((i) => i.name === item.name)
+    const existingCartItem = this._cart.items.find((i) => i.name === item.name);
     if (existingCartItem) {
       const items = this._cart.items.map((i) => {
         return i.name === item.name
@@ -78,6 +77,18 @@ export class CartService {
   get total() {
     return this._cart.items.reduce((prev, curr) => {
       return prev + curr.price * curr.quantities;
+    }, 0);
+  }
+
+  emptyCart() {
+    this.cart = {
+      items: [],
+    };
+  }
+
+  get itemsInCart() {
+    return this._cart.items.reduce((prev, curr) => {
+      return prev + curr.quantities;
     }, 0);
   }
 }

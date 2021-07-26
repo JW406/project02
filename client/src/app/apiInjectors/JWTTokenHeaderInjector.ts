@@ -30,7 +30,10 @@ export class JWTTokenHeaderInjector implements HttpInterceptor {
         return next.handle(resetReq).pipe(
           tap(
             (e: any) => {
-              if (e.body?.isSuccess === 'false') {
+              if (
+                String.prototype.toLowerCase.call(e.body?.msg ?? '') ===
+                'unauthorized'
+              ) {
                 this.um.logout();
               }
             },

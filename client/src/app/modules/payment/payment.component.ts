@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingSpinnerService } from 'src/app/services/loading-spinner/loading-spinner.service';
 import { MessageBoxService } from 'src/app/services/message-box/message-box.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 
@@ -20,13 +21,13 @@ export class PaymentComponent implements OnInit {
     quantities: undefined,
     itemName: 'Poke Coins',
   };
-  isWait = false;
   currentCoins?: number = undefined;
 
   constructor(
     private http: HttpClient,
     private mb: MessageBoxService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private ls: LoadingSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +51,7 @@ export class PaymentComponent implements OnInit {
     }
     document.body.appendChild(temp);
     temp.submit();
-    this.isWait = true;
+    this.ls.isWait = true;
     // Polling for payment to be finished, or cancelled
     setInterval(() => {
       const flag = window.localStorage.getItem('__flag');
@@ -72,13 +73,12 @@ export class PaymentComponent implements OnInit {
               isRead: false,
             }
           );
-          ++this.notificationService.currentNotificationNumber;
           this.currentCoins! += this.model.quantities as number;
           this.reset();
         } else if (flag === 'false') {
           this.mb.show('Failed');
         }
-        this.isWait = false;
+        this.ls.isWait = false;
       }
     }, 500);
   };

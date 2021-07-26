@@ -12,20 +12,25 @@
         (click)="notificationService.readAll()">
         Notifications
       </button>
-      <button mat-raised-button color="primary" [matMenuTriggerFor]="cart" style="margin-left: 1rem;">
+      <button mat-raised-button color="primary" [matBadge]="cs.itemsInCart || undefined" matBadgePosition="before"
+        matBadgeColor="accent" [matMenuTriggerFor]="cart" style="margin-left: 1rem;" (click)="onCartBtnClick()">
         Cart
       </button>
-    </div>
+      </div>
     <mat-menu #cart="matMenu">
       <div *ngIf="!cs.cart.items.length;else other1" style="box-sizing: border-box;padding: 0 2rem;">
-        Your cart is empty!
+        <div style="text-align: center;">Your cart is empty!</div>
+        <br><br>
+        <div style="text-align: right;">Subtotal: {{ cs.total }}&nbsp;Poké Token</div>
+        <div style="text-align: right;">In your pocket: {{ currentCoins }}&nbsp;Poké Token</div>
       </div>
       <ng-template #other1>
         <div style="padding: 0 1rem;">
           <app-cart-item *ngFor="let item of cs.cart.items" [title]="item.name" [price]="item.price"
             [quantities]="item.quantities" [img]="item.photo">
           </app-cart-item>
-          <div style="text-align: right;">Your total: {{ cs.total }}&nbsp;Poké Token</div>
+          <div style="text-align: right;">Subtotal: {{ cs.total }}&nbsp;Poké Token</div>
+          <div style="text-align: right;">In your pocket: {{ currentCoins }}&nbsp;Poké Token</div>
           <button mat-raised-button color="primary" style="width: 100%;" (click)="checkout($event)">
             Checkout
           </button>
