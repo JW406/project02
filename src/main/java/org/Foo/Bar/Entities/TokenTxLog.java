@@ -1,22 +1,17 @@
 package org.Foo.Bar.Entities;
 
-import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -42,18 +37,11 @@ public class TokenTxLog {
   @Column
   private Integer id;
 
-  @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "customer_id", referencedColumnName = "id")
   private User customer;
 
-  @Column(name = "tx_created_time")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date txCreatedTime;
-
-  @Column(name = "tx_source_type")
-  @Enumerated(EnumType.STRING)
-  private TxType txSourceType;
-
-  @Column(name = "poke_token_exchanged")
-  private Long pokeTokenExchanged;
+  @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+  @JoinColumn(name = "transaction_id", referencedColumnName = "id")
+  private PokeTransaction transaction;
 }

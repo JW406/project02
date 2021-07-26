@@ -45,7 +45,7 @@ public class PaymentController {
   public void successHook(HttpServletRequest req, @RequestHeader HttpHeaders headers) {
     Long pokeTokenQuantities = (Long) req.getSession().getAttribute("pokeToken");
     String email = tokenManager.getUsernameFromHeader(headers);
-    userDao.updateUserToken(pokeTokenQuantities, email);
+    userDao.updateUserTokenByDelta(pokeTokenQuantities, email);
   }
 
   @GetMapping("/pay-cb/cancel")

@@ -3,13 +3,20 @@ package org.Foo.Bar;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Random;
 
+import org.Foo.Bar.Entities.PokeTransaction;
 import org.Foo.Bar.Entities.PokemonItem;
+import org.Foo.Bar.Entities.TokenTxLog;
+import org.Foo.Bar.Entities.TxType;
 import org.Foo.Bar.Entities.User;
 import org.Foo.Bar.EntitiesDao.PokeItemDao;
+import org.Foo.Bar.EntitiesDao.TokenTxLogDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
+import org.Foo.Bar.Exceptions.InsufficentTokenException;
+import org.Foo.Bar.Services.TransactionService;
 import org.Foo.Bar.Services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +30,10 @@ public class TestEntitesDao {
   private UserDao userDao;
   @Autowired
   private PokeItemDao pokeItemDao;
+  @Autowired
+  private TransactionService transactionService;
+  @Autowired
+  private TokenTxLogDao tokenTxLogDao;
 
   @Test
   public void testPersistUser() {
@@ -30,10 +41,9 @@ public class TestEntitesDao {
     user.setEmail("hello@world.com" + new Random().nextInt(5555));
     user.setName("bar");
     user.setPokeToken(0L);
-    Integer id = userService.persistUser(user);
     User foundUser = userDao.findByEmail(user.getEmail());
     assertNotNull(foundUser);
-    userDao.deleteById(id);
+    deleteUser(foundUser);
     foundUser = userDao.findByEmail(user.getEmail());
     assertNull(foundUser);
   }
@@ -42,20 +52,25 @@ public class TestEntitesDao {
   public void testCreditTokensToUser() {
     User user = newUser();
     Long amntToCredit = 222L;
-    userDao.updateUserToken(amntToCredit, user.getEmail());
+    Long pokeTokenBefore = user.getPokeToken();
+    userDao.updateUserTokenByDelta(amntToCredit, user.getEmail());
     User u = userDao.findByEmail(user.getEmail());
-    assertEquals(u.getPokeToken(), amntToCredit);
-    userDao.deleteById(u.getId());
+    assertEquals(u.getPokeToken(), pokeTokenBefore + amntToCredit);
+    deleteUser(user);
     assertNull(userDao.findByEmail(user.getEmail()));
   }
 
-  public User newUser() {
+  private User newUser() {
     User user = new User();
-    user.setEmail("hello@world.com" + new Random().nextInt(5555));
+    user.setEmail("hello@world.com" + new Random().nextInt(5555) + 9999);
     user.setName("bar");
-    user.setPokeToken(0L);
+    user.setPokeToken(1000L);
     user = userDao.save(user);
     return user;
+  }
+
+  private void deleteUser(User user) {
+    userDao.deleteById(user.getId());
   }
 
   @Test
@@ -65,5 +80,37 @@ public class TestEntitesDao {
     pokemonItem = pokeItemDao.save(pokemonItem);
     assertNotNull(pokemonItem);
     pokeItemDao.deleteById(pokemonItem.getId());
+  }
+
+  @Test
+  public void testTransaction() {
+    User user = newUser();
+
+    Long pokeTokenBefore = user.getPokeToken();
+    PokeTransaction tx = new PokeTransaction();
+    tx.setTxSourceType(TxType.Order);
+    tx.setPokeTokenExchanged(Math.abs(new Random().nextLong() % 1000));
+    TokenTxLog txLog = transactionService.triggerTransaction(tx, user.getEmail());
+    user = userDao.findByEmail(user.getEmail());
+    assertEquals(pokeTokenBefore - tx.getPokeTokenExchanged(), user.getPokeToken());
+
+    tokenTxLogDao.deleteById(txLog.getId());
+    deleteUser(user);
+  }
+
+  @Test
+  public void testTransactionOverdraft() {
+    final User user = newUser();
+
+    Long pokeTokenBefore = user.getPokeToken();
+    PokeTransaction tx = new PokeTransaction();
+    tx.setTxSourceType(TxType.Order);
+    tx.setPokeTokenExchanged(pokeTokenBefore + 999);
+    assertThrows(InsufficentTokenException.class, () -> {
+      transactionService.triggerTransaction(tx, user.getEmail());
+    });
+    User userRefetch = userDao.findByEmail(user.getEmail());
+    assertEquals(pokeTokenBefore, userRefetch.getPokeToken());
+    deleteUser(userRefetch);
   }
 }

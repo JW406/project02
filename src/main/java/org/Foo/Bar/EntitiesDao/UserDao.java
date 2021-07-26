@@ -18,5 +18,5 @@ public interface UserDao extends JpaRepository<User, Integer> {
   @Modifying
   @Transactional
   @Query("update User u set u.pokeToken = u.pokeToken + ?1 where u.email = ?2")
-  void updateUserToken(Long pokeToken, String email);
+  void updateUserTokenByDelta(Long pokeToken, String email);
 }

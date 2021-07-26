@@ -1,2 +1,6 @@
-select * from proj02_User;
-select * from proj02_PokemonItem;
+select t.table_name,t.num_rows from user_tables t where t.table_name like 'PROJ02_%';
+
+select * from PROJ02_POKEMONITEM;
+select * from PROJ02_POKE_TRANSACTION;
+select * from PROJ02_TOKEN_TX_LOG;
+select * from PROJ02_USER;
