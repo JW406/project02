@@ -25,8 +25,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 
+@Slf4j
 @Controller
 public class OAuthController {
   private QueryStringParser qsParser;
@@ -49,6 +51,7 @@ public class OAuthController {
     String res = "";
     // TODO: use restTemplate insteat of okhttp3
     if (qsMap.containsKey("code")) {
+      log.info("Exchanging {} for Google access code", qsMap.get(("code")));
       res = http.post("https://oauth2.googleapis.com/token", http.encodeQueryString(new HashMap<String, String>() {
         {
           put("code", qsMap.get("code"));
@@ -66,6 +69,7 @@ public class OAuthController {
       model.addAttribute("accessToken", googleAccessToken.getAccess_token());
       model.addAttribute("idToken", googleAccessToken.getId_token());
     } catch (Exception e) {
+      log.error("Error parsing Google Access Token");
     }
     return "access_token_helper";
   }
@@ -79,6 +83,7 @@ public class OAuthController {
 
     // TODO: use restTemplate insteat of okhttp3
     if (qsMap.containsKey("code")) {
+      log.info("Exchanging {} for GitHub access code", qsMap.get(("code")));
       res = http.post("https://github.com/login/oauth/access_token",
           objectMapper.writeValueAsString(new HashMap<String, String>() {
             {
@@ -102,6 +107,7 @@ public class OAuthController {
   @ResponseBody
   @PostMapping("/auth/google_redirect_persist")
   public Map<Object, Object> GoogleUserPersist(@RequestBody User user) {
+    log.info("Google Redirect Persist Api handling User {}", user.getEmail(), user.getName());
     userService.persistUser(user);
     String token = tokenManager.generateJwtToken(
         new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()),
@@ -120,6 +126,7 @@ public class OAuthController {
   @ResponseBody
   @PostMapping("/auth/github_redirect_persist")
   public Map<Object, Object> GitHubUserPersist(@RequestBody User user) {
+    log.info("GitHub Redirect Persist Api handling User {}", user.getEmail(), user.getName());
     userService.persistUser(user);
     String token = tokenManager.generateJwtToken(
         new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()),

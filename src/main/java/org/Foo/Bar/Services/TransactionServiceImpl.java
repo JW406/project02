@@ -14,6 +14,9 @@ import org.Foo.Bar.Exceptions.InsufficentTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TransactionServiceImpl implements TransactionService {
   @Autowired
@@ -25,6 +28,8 @@ public class TransactionServiceImpl implements TransactionService {
 
   private void checkSufficientBalance(User customer, Long amnt) {
     if (customer.getPokeToken() < amnt) {
+      log.warn("{}, who has {}, is trying to complete a transaction ({})", customer.getEmail(), customer.getPokeToken(),
+          amnt);
       throw new InsufficentTokenException();
     }
   }
@@ -40,6 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
     tokenTxLog.setCustomer(customer);
     tokenTxLog.setTransaction(tx);
     pokeTransactionDao.save(tx);
+    log.info("{} completed a transaction ({})", customer.getEmail(), tx.getPokeTokenExchanged());
     return tokenTxLogDao.save(tokenTxLog);
   }
 }

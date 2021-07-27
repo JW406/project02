@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class PaymentController {
   private HTTPUtils http;
@@ -53,16 +56,19 @@ public class PaymentController {
       return ResponseEntity.status(401).body(null);
     }
     userDao.updateUserTokenByDelta(pokeTokenQuantities, email);
+    log.info("User payment successful");
     return ResponseEntity.ok().body(null);
   }
 
   @GetMapping("/pay-cb/cancel")
   public String cancel() {
+    log.info("User payment canceled");
     return "stripe_cancel";
   }
 
   @PostMapping("/pay/create-checkout-session")
   public String checkOut(HttpServletRequest req, @ModelAttribute CheckoutModel param) throws StripeException {
+    log.info("Creating User checkout out session...");
     Stripe.apiKey = SpringContextAccessor.stripeClientSecret;
     String baseUrl = http.normalizeRemoteHost(req.getScheme(), req.getRemoteHost(), req.getServerPort());
     LineItem item = SessionCreateParams.LineItem.builder() //
