@@ -1,5 +1,6 @@
 package org.Foo.Bar;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -9,8 +10,12 @@ import java.util.Random;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.Foo.Bar.Entities.User;
+import org.Foo.Bar.EntitiesDao.TokenTxLogDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
+import org.Foo.Bar.RestObjects.MakeTransactionBody;
 import org.Foo.Bar.RestObjects.SuccessResponse;
+import org.Foo.Bar.RestObjects.TokenQueryResponse;
+import org.Foo.Bar.RestObjects.TransactionResponse;
 import org.Foo.Bar.RestObjects.UpdateUserInfo;
 import org.Foo.Bar.Security.TokenManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +41,8 @@ public class TestControllers {
   private WebApplicationContext wac;
   @Autowired
   private UserDao userDao;
+  @Autowired
+  private TokenTxLogDao tokenTxLogDao;
 
   @BeforeEach
   public void setUp() {
@@ -84,6 +91,50 @@ public class TestControllers {
       SuccessResponse successResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
           SuccessResponse.class);
       assertTrue(successResponse.getSuccess());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    TestUtils.deleteUser(userDao, user);
+  }
+
+  @Test
+  public void testUserTransactions() {
+    User user = TestUtils.newUser(userDao);
+    String token = tokenManager.generateJwtToken(
+        new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()),
+        new HashMap<>());
+    try {
+      MakeTransactionBody makeTransactionBody = new MakeTransactionBody();
+      makeTransactionBody.setTxAmnt(123L);
+      MvcResult result = mockMvc
+          .perform(MockMvcRequestBuilders.post("/api/shop/make-transaction").header("Authorization", "Bearer " + token)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(new ObjectMapper().writeValueAsString(makeTransactionBody)))
+          .andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+      TransactionResponse successResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+          TransactionResponse.class);
+      assertTrue(successResponse.getSuccess());
+      tokenTxLogDao.deleteById(successResponse.getTxId());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    TestUtils.deleteUser(userDao, user);
+  }
+
+  @Test
+  public void testUserTokenQuery() {
+    User user = TestUtils.newUser(userDao);
+    Long tokenBefore = user.getPokeToken();
+    String token = tokenManager.generateJwtToken(
+        new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()),
+        new HashMap<>());
+    try {
+      MvcResult result = mockMvc
+          .perform(MockMvcRequestBuilders.get("/api/user/tokens").header("Authorization", "Bearer " + token))
+          .andExpect(MockMvcResultMatchers.status().isOk()).andDo(MockMvcResultHandlers.print()).andReturn();
+      TokenQueryResponse successResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
+          TokenQueryResponse.class);
+      assertEquals(successResponse.getPokeToken(), tokenBefore);
     } catch (Exception e) {
       e.printStackTrace();
     }

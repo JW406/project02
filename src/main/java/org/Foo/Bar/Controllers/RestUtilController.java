@@ -5,16 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import org.Foo.Bar.Entities.PokeTransaction;
+import org.Foo.Bar.Entities.TokenTxLog;
 import org.Foo.Bar.Entities.TxType;
 import org.Foo.Bar.Entities.User;
 import org.Foo.Bar.EntitiesDao.PokeItemDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
 import org.Foo.Bar.RestObjects.MakeTransactionBody;
-import org.Foo.Bar.RestObjects.UpdateUserInfo;
 import org.Foo.Bar.RestObjects.SuccessResponse;
+import org.Foo.Bar.RestObjects.TokenQueryResponse;
+import org.Foo.Bar.RestObjects.TransactionResponse;
+import org.Foo.Bar.RestObjects.UpdateUserInfo;
 import org.Foo.Bar.Security.TokenManager;
 import org.Foo.Bar.Services.TransactionService;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RestUtilController {
   @Autowired
-  private SessionFactory sessionFactory;
-  @Autowired
   private UserDao userDao;
   @Autowired
   private PokeItemDao pokeItemDao;
@@ -38,15 +38,13 @@ public class RestUtilController {
   private TransactionService transactionService;
 
   @GetMapping("/api/user/tokens")
-  public Map<Object, Object> userTokenQuery(@RequestHeader HttpHeaders headers) {
+  public TokenQueryResponse userTokenQuery(@RequestHeader HttpHeaders headers) {
     String email = tokenManager.getUsernameFromHeader(headers);
     Long tokens = userDao.queryUserPokeToken(email);
-    return new HashMap<Object, Object>() {
-      {
-        put("email", email);
-        put("pokeToken", tokens);
-      }
-    };
+    TokenQueryResponse tokenQueryResponse = new TokenQueryResponse();
+    tokenQueryResponse.setEmail(email);
+    tokenQueryResponse.setPokeToken(tokens);
+    return tokenQueryResponse;
   }
 
   @GetMapping("/api/shop/get-all-pokemons")
@@ -70,18 +68,21 @@ public class RestUtilController {
   }
 
   @PostMapping("/api/shop/make-transaction")
-  public SuccessResponse makeTransaction(@RequestBody MakeTransactionBody body, @RequestHeader HttpHeaders headers) {
+  public TransactionResponse makeTransaction(@RequestBody MakeTransactionBody body,
+      @RequestHeader HttpHeaders headers) {
     String email = tokenManager.getUsernameFromHeader(headers);
     PokeTransaction tx = new PokeTransaction();
     tx.setPokeTokenExchanged(body.getTxAmnt());
     tx.setTxSourceType(TxType.Order);
-    SuccessResponse successResponse = new SuccessResponse();
+    TransactionResponse txResponse = new TransactionResponse();
     try {
-      transactionService.triggerTransaction(tx, email);
-      successResponse.setSuccess(true);
+      TokenTxLog triggerTransaction = transactionService.triggerTransaction(tx, email);
+      txResponse.setSuccess(true);
+      txResponse.setTxId(triggerTransaction.getId());
     } catch (Exception e) {
-      successResponse.setSuccess(false);
+      txResponse.setSuccess(false);
+      txResponse.setTxId(-1);
     }
-    return successResponse;
+    return txResponse;
   }
 }

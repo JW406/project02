@@ -49,4 +49,3 @@ public class PokeTransaction {
   @Column(name = "poke_token_exchanged")
   private Long pokeTokenExchanged;
 }
-
