@@ -13,7 +13,6 @@
         const userInfoText = decodeURIComponent(escape(window.atob(jwt.replace(/-/g, "+").replace(/_/g, "/"))))
         localStorage.setItem('userInfo', userInfoText)
         localStorage.setItem('access_token', document.getElementById('accessToken').innerText)
-        localStorage.setItem('__flag', 'true')
         const userInfo = JSON.parse(userInfoText)
         ;(async () => {
           const resp = await fetch('/auth/google_redirect_persist', {
@@ -28,6 +27,7 @@
           })
           const jwtToken = (await resp.json())['token']
           localStorage.setItem('jwtToken', jwtToken)
+          localStorage.setItem('__flag', 'true')
           setTimeout(() => window.close(), 0)
         })()
       } else {
@@ -47,7 +47,6 @@
           const userInfoText = await data.text();
           localStorage.setItem('access_token', accessToken)
           localStorage.setItem('userInfo', userInfoText)
-          localStorage.setItem('__flag', 'true')
           const userInfo = JSON.parse(userInfoText)
           const resp = await fetch('/auth/github_redirect_persist', {
             method: 'post',
@@ -61,6 +60,7 @@
           })
           const jwtToken = (await resp.json())['token']
           localStorage.setItem('jwtToken', jwtToken)
+          localStorage.setItem('__flag', 'true')
           setTimeout(() => window.close(), 0)
         })()
       } else {

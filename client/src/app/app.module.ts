@@ -34,6 +34,7 @@ import { MessageBoxService } from './services/message-box/message-box.service';
 import { NotificationService } from './services/notification/notification.service';
 import { OAuth2Service } from './services/oauth2/oauth2.service';
 import { UserManagementService } from './services/user-management/user-management.service';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 
@@ -50,6 +51,7 @@ import { UserManagementService } from './services/user-management/user-managemen
     MessageBoxComponent,
     CardItemComponent,
     CartItemComponent,
+    FooterComponent,
   ],
   imports: [
     HttpClientModule,

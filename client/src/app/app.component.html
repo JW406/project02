@@ -1,6 +1,10 @@
-<app-header [openDialog]="openDialog"></app-header>
+<div class="app-root">
+  <app-header [openDialog]="openDialog"></app-header>
 
-<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
+
+  <app-footer></app-footer>
+</div>
 
 <div *ngIf="ls.isWait" class="spinner">
   <mat-spinner></mat-spinner>
