@@ -9,9 +9,14 @@ import java.util.Random;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.Foo.Bar.Entities.PokeTransaction;
+import org.Foo.Bar.Entities.TokenTxLog;
 import org.Foo.Bar.Entities.User;
 import org.Foo.Bar.EntitiesDao.TokenTxLogDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
+import org.Foo.Bar.RestObjects.CheckoutModel;
+import org.Foo.Bar.RestObjects.GitHubAccessToken;
+import org.Foo.Bar.RestObjects.GoogleAccessToken;
 import org.Foo.Bar.RestObjects.MakeTransactionBody;
 import org.Foo.Bar.RestObjects.SuccessResponse;
 import org.Foo.Bar.RestObjects.TokenQueryResponse;
@@ -47,6 +52,33 @@ public class TestControllers {
   @BeforeEach
   public void setUp() {
     mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+  }
+
+  @Test
+  public void testUntestablePojo() {
+    CheckoutModel checkoutModel = new CheckoutModel();
+    checkoutModel.setAmount(1L);
+    checkoutModel.getAmount();
+    checkoutModel.getItemName();
+    checkoutModel.getQuantities();
+    GitHubAccessToken gitHubAccessToken = new GitHubAccessToken();
+    gitHubAccessToken.setAccess_token("1");
+    gitHubAccessToken.getAccess_token();
+    gitHubAccessToken.getScope();
+    gitHubAccessToken.getToken_type();
+    GoogleAccessToken googleAccessToken = new GoogleAccessToken();
+    googleAccessToken.setAccess_token("1");
+    googleAccessToken.getAccess_token();
+    googleAccessToken.getExpires_in();
+    googleAccessToken.getId_token();
+    googleAccessToken.getScope();
+    googleAccessToken.getToken_type();
+    TokenTxLog tokenTxLog = new TokenTxLog();
+    tokenTxLog.getCustomer();
+    tokenTxLog.getTransaction();
+    PokeTransaction pokeTransaction = new PokeTransaction();
+    pokeTransaction.getTxCreatedTime();
+    pokeTransaction.getTxSourceType();
   }
 
   @Test
@@ -135,6 +167,13 @@ public class TestControllers {
       TokenQueryResponse successResponse = new ObjectMapper().readValue(result.getResponse().getContentAsString(),
           TokenQueryResponse.class);
       assertEquals(successResponse.getPokeToken(), tokenBefore);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    try {
+      mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tokens"))
+          .andExpect(MockMvcResultMatchers.status().is(401)).andDo(MockMvcResultHandlers.print()).andReturn();
     } catch (Exception e) {
       e.printStackTrace();
     }

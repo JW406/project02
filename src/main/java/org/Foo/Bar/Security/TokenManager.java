@@ -3,6 +3,7 @@ package org.Foo.Bar.Security;
 import java.util.Date;
 import java.util.Map;
 
+import org.Foo.Bar.Exceptions.InvalidAuthorizationHeader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,12 +38,13 @@ public class TokenManager {
     return claims.getSubject();
   }
 
-  public String getUsernameFromHeader(HttpHeaders headers) {
+  public String getUsernameFromHeader(HttpHeaders headers) throws InvalidAuthorizationHeader {
     String authorization = headers.getFirst("Authorization");
     if (authorization != null) {
       String token = authorization.substring(6);
       return getUsernameFromToken(token);
+    } else {
+      throw new InvalidAuthorizationHeader();
     }
-    return "";
   }
 }

@@ -10,11 +10,13 @@ import com.stripe.param.checkout.SessionCreateParams.LineItem;
 
 import org.Foo.Bar.SpringContextAccessor;
 import org.Foo.Bar.EntitiesDao.UserDao;
+import org.Foo.Bar.Exceptions.InvalidAuthorizationHeader;
 import org.Foo.Bar.RestObjects.CheckoutModel;
 import org.Foo.Bar.Security.TokenManager;
 import org.Foo.Bar.UtilityServices.HTTPUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -42,10 +44,16 @@ public class PaymentController {
 
   @ResponseBody
   @GetMapping("/pay/success-hook")
-  public void successHook(HttpServletRequest req, @RequestHeader HttpHeaders headers) {
+  public ResponseEntity<?> successHook(HttpServletRequest req, @RequestHeader HttpHeaders headers) {
     Long pokeTokenQuantities = (Long) req.getSession().getAttribute("pokeToken");
-    String email = tokenManager.getUsernameFromHeader(headers);
+    String email;
+    try {
+      email = tokenManager.getUsernameFromHeader(headers);
+    } catch (InvalidAuthorizationHeader e) {
+      return ResponseEntity.status(401).body(null);
+    }
     userDao.updateUserTokenByDelta(pokeTokenQuantities, email);
+    return ResponseEntity.ok().body(null);
   }
 
   @GetMapping("/pay-cb/cancel")
