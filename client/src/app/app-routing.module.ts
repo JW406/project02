@@ -3,9 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { ShopComponent } from './components/shop/shop.component';
 import { UserDashboardComponent } from './components/user-dashboard/user-dashboard.component';
-import { UserDefaultComponent } from './components/user-dashboard/user-default/user-default.component';
 import { UserProfileComponent } from './components/user-dashboard/user-profile/user-profile.component';
-import { UserSettingsComponent } from './components/user-dashboard/user-settings/user-settings.component';
 import { LoginGuard } from './guard/LoginGuard';
 import { FourOFourComponent } from './pages/four-ofour/four-ofour.component';
 
@@ -29,9 +27,8 @@ const routes: Routes = [
     component: UserDashboardComponent,
     canActivate: [LoginGuard],
     children: [
-      { path: 'settings', component: UserSettingsComponent },
       { path: 'profiles', component: UserProfileComponent },
-      { path: '', component: UserDefaultComponent },
+      { path: '', component: UserProfileComponent },
     ],
   },
   { path: '**', component: FourOFourComponent },

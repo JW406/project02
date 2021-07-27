@@ -10,6 +10,7 @@ import org.Foo.Bar.Entities.User;
 import org.Foo.Bar.EntitiesDao.PokeItemDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
 import org.Foo.Bar.RestObjects.MakeTransactionBody;
+import org.Foo.Bar.RestObjects.UpdateUserInfo;
 import org.Foo.Bar.Security.TokenManager;
 import org.Foo.Bar.Services.TransactionService;
 import org.hibernate.Session;
@@ -17,6 +18,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -71,6 +73,17 @@ public class RestUtilController {
   public User getUserInfo(@RequestHeader HttpHeaders headers) {
     String email = tokenManager.getUsernameFromHeader(headers);
     return userDao.findByEmail(email);
+  }
+
+  @PatchMapping("/api/update-user-info")
+  public Map<Object, Object> updateUserInfo(@RequestHeader HttpHeaders headers, @RequestBody UpdateUserInfo body) {
+    String email = tokenManager.getUsernameFromHeader(headers);
+    userDao.updateUserNameAndZipCode(email, body.getName(), body.getZipCode());
+    return new HashMap<Object, Object>() {
+      {
+        put("isSuccess", true);
+      }
+    };
   }
 
   @PostMapping("/api/shop/make-transaction")

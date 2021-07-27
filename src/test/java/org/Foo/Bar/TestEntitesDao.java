@@ -35,12 +35,22 @@ public class TestEntitesDao {
   @Autowired
   private TokenTxLogDao tokenTxLogDao;
 
+  private User newUser() {
+    User user = new User();
+    user.setEmail("hello@world.com" + new Random().nextInt(5555) + 9999);
+    user.setName("bar");
+    user.setPokeToken(1000L);
+    user = userDao.save(user);
+    return user;
+  }
+
+  private void deleteUser(User user) {
+    userDao.deleteById(user.getId());
+  }
+
   @Test
   public void testPersistUser() {
-    User user = new User();
-    user.setEmail("hello@world.com" + new Random().nextInt(5555));
-    user.setName("bar");
-    user.setPokeToken(0L);
+    User user = newUser();
     User foundUser = userDao.findByEmail(user.getEmail());
     assertNotNull(foundUser);
     deleteUser(foundUser);
@@ -58,19 +68,6 @@ public class TestEntitesDao {
     assertEquals(u.getPokeToken(), pokeTokenBefore + amntToCredit);
     deleteUser(user);
     assertNull(userDao.findByEmail(user.getEmail()));
-  }
-
-  private User newUser() {
-    User user = new User();
-    user.setEmail("hello@world.com" + new Random().nextInt(5555) + 9999);
-    user.setName("bar");
-    user.setPokeToken(1000L);
-    user = userDao.save(user);
-    return user;
-  }
-
-  private void deleteUser(User user) {
-    userDao.deleteById(user.getId());
   }
 
   @Test
@@ -112,5 +109,21 @@ public class TestEntitesDao {
     User userRefetch = userDao.findByEmail(user.getEmail());
     assertEquals(pokeTokenBefore, userRefetch.getPokeToken());
     deleteUser(userRefetch);
+  }
+
+  @Test
+  public void testUpdateUserNameAndZipCode() {
+    User user = newUser();
+
+    String newName = "Foobar";
+    String newZipCode = "33065";
+    userDao.updateUserNameAndZipCode(user.getEmail(), newName, newZipCode);
+
+    user = userDao.findByEmail(user.getEmail());
+
+    assertEquals(newName, user.getName());
+    assertEquals(newZipCode, user.getZipCode());
+
+    deleteUser(user);
   }
 }

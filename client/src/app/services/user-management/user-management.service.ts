@@ -17,17 +17,23 @@ export class UserManagementService {
 
   constructor(private http: HttpClient, private ws: WeatherService) {}
 
+  parseJWT(jwt?: string | null) {
+    const seg = jwt?.split('.')[1];
+    if (seg) {
+      return JSON.parse(
+        decodeURIComponent(
+          escape(window.atob(seg.replace(/-/g, '+').replace(/_/g, '/')))
+        )
+      );
+    } else {
+      return {};
+    }
+  }
+
   initSync = async () => {
-    let OAuthUserInfo: string | null = '';
-    if ((OAuthUserInfo = localStorage.getItem('userInfo'))) {
-      const userObj = JSON.parse(OAuthUserInfo);
-      const authType = localStorage.getItem('authType');
-      if (authType === 'google') {
-        this.setUsername(userObj.name);
-      } else if (authType === 'github') {
-        this.setUsername(userObj.login);
-      }
+    if (localStorage.getItem('jwtToken')) {
       const userInfo = await this.getUserInfo();
+      this.setUsername(userInfo['name']);
       const res = await this.ws.getCurrentWeatherByZipCode(userInfo['zipCode']);
       this.userLocation.temperatureF = res.current.temp_f;
       this.userLocation.name = res.location.name;
@@ -36,7 +42,12 @@ export class UserManagementService {
   };
 
   getUserInfo() {
-    return this.http.get('/api/get-user-info').toPromise() as Promise<any>;
+    return this.http.get('/api/get-user-info').toPromise() as Promise<{
+      email: string;
+      name: string;
+      zipCode: string;
+      pokeToken: number;
+    }>;
   }
 
   setUsername = (name: string) => {

@@ -18,11 +18,6 @@ export class UserDashboardComponent implements OnInit {
   }
   tabs: any[] = [
     {
-      link: '/user/settings',
-      name: 'Settings',
-      icon: 'setting_icon',
-    },
-    {
       link: '/user/profiles',
       name: 'Profile',
       icon: 'user_profile_icon',

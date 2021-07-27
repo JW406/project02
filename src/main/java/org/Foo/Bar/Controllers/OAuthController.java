@@ -79,15 +79,16 @@ public class OAuthController {
 
     // TODO: use restTemplate insteat of okhttp3
     if (qsMap.containsKey("code")) {
-      res = http.post("https://github.com/login/oauth/access_token", objectMapper.writeValueAsString(new HashMap<String, String>() {
-        {
-          put("code", qsMap.get("code"));
-          put("client_id", SpringContextAccessor.githubClientID);
-          put("client_secret", SpringContextAccessor.githubClientSecret);
-          put("state", "foobar");
-          put("redirect_uri", baseurl + "/auth/github_redirect");
-        }
-      }), HTTPUtils.JSON);
+      res = http.post("https://github.com/login/oauth/access_token",
+          objectMapper.writeValueAsString(new HashMap<String, String>() {
+            {
+              put("code", qsMap.get("code"));
+              put("client_id", SpringContextAccessor.githubClientID);
+              put("client_secret", SpringContextAccessor.githubClientSecret);
+              put("state", "foobar");
+              put("redirect_uri", baseurl + "/auth/github_redirect");
+            }
+          }), HTTPUtils.JSON);
     }
     try {
       model.addAttribute("authType", "github");
@@ -102,7 +103,13 @@ public class OAuthController {
   @PostMapping("/auth/google_redirect_persist")
   public Map<Object, Object> GoogleUserPersist(@RequestBody User user) {
     userService.persistUser(user);
-    String token = tokenManager.generateJwtToken(new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()));
+    String token = tokenManager.generateJwtToken(
+        new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()),
+        new HashMap<String, Object>() {
+          {
+            put("name", user.getName());
+          }
+        });
     return new HashMap<Object, Object>() {
       {
         put("token", token);
@@ -114,7 +121,13 @@ public class OAuthController {
   @PostMapping("/auth/github_redirect_persist")
   public Map<Object, Object> GitHubUserPersist(@RequestBody User user) {
     userService.persistUser(user);
-    String token = tokenManager.generateJwtToken(new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()));
+    String token = tokenManager.generateJwtToken(
+        new org.springframework.security.core.userdetails.User(user.getEmail(), "", new ArrayList<>()),
+        new HashMap<String, Object>() {
+          {
+            put("name", user.getName());
+          }
+        });
     return new HashMap<Object, Object>() {
       {
         put("token", token);

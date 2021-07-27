@@ -19,8 +19,7 @@ public class TokenManager {
   @Value("${secret}")
   private String jwtSecret;
 
-  public String generateJwtToken(UserDetails userDetails) {
-    Map<String, Object> claims = new HashMap<>();
+  public String generateJwtToken(UserDetails userDetails, Map<String, Object> claims) {
     return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername())
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))

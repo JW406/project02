@@ -1,5 +1,7 @@
 package org.Foo.Bar.Services;
 
+import java.util.Date;
+
 import org.Foo.Bar.Entities.User;
 import org.Foo.Bar.EntitiesDao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ public class UserServiceImpl implements UserService {
     Integer res = null;
     if (userDao.findByEmail(user.getEmail()) == null) {
       user.setPokeToken(0L);
+      user.setTsDateRegistered(new Date());
       User u = userDao.save(user);
       res = u.getId();
     }

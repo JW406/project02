@@ -1,2 +1,20 @@
-<div>fetched from java: <pre>{{data | json}}</pre></div>
-<!-- <div>fetched from java: {{data | json}}</div> -->
+<div style="width:500px;margin: 2rem auto;">
+  <form (submit)="submit($event)">
+    <div class="fields">
+      <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="name" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Zip Code</mat-label>
+        <input matInput [(ngModel)]="zipCode" [ngModelOptions]="{standalone: true}">
+      </mat-form-field>
+    </div>
+
+    <div class="button-grp">
+      <button mat-raised-button color="warn" type="button" (click)="reset()">Reset</button>
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </div>
+  </form>
+</div>
