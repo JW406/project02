@@ -42,6 +42,9 @@ public class User {
   @Column
   private String name;
 
+  @Column(name = "zip_code")
+  private String zipCode = "10001";
+
   @Column
   private Long pokeToken;
 

@@ -7,7 +7,7 @@
   </div>
   <div>
     <div *ngIf="um.loggedInUser.username">
-      <button mat-button>{{ userLocation.name }},&nbsp;{{ userLocation.region }}&nbsp;{{ userLocation.temperatureF }}F</button>
+      <button mat-button>{{ um.userLocation.name }},&nbsp;{{ um.userLocation.region }}&nbsp;{{ um.userLocation.temperatureF }}F</button>
       <button mat-raised-button color="primary" [matBadge]="notificationService.currentNotificationNumber || undefined"
         matBadgePosition="before" matBadgeColor="accent" [matMenuTriggerFor]="noficatiton"
         (click)="notificationService.readAll()">

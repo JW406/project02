@@ -16,11 +16,6 @@ import { WeatherService } from 'src/app/services/weather/weather.service';
 export class HeaderComponent implements OnInit {
   @Input() openDialog!: () => void;
 
-  userLocation = {
-    name: '',
-    region: '',
-    temperatureF: 0,
-  }
   currentCoins = 0;
   constructor(
     public um: UserManagementService,
@@ -29,16 +24,10 @@ export class HeaderComponent implements OnInit {
     public cs: CartService,
     private mb: MessageBoxService,
     private ps: PokemonService,
-    private ls: LoadingSpinnerService,
-    private ws: WeatherService,
+    private ls: LoadingSpinnerService
   ) {}
 
-  async ngOnInit() {
-    const res = await this.ws.getCurrentWeatherByZipCode(33065)
-    this.userLocation.temperatureF = res.current.temp_f
-    this.userLocation.name = res.location.name
-    this.userLocation.region = res.location.region
-  }
+  ngOnInit() {}
 
   async refreshToken() {
     const res = await this.ps.getCurrentPokeToken();

@@ -4,6 +4,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialogData } from 'src/app/app.component';
 import { OAuth2Service } from 'src/app/services/oauth2/oauth2.service';
+import { UserManagementService } from 'src/app/services/user-management/user-management.service';
 
 const googleLogoURL =
   'https://raw.githubusercontent.com/fireflysemantics/logo/master/Google.svg';
@@ -21,7 +22,8 @@ export class LoginDialogComponent implements OnInit {
     private domSanitizer: DomSanitizer,
     @Inject(MAT_DIALOG_DATA)
     private parentData: MatDialogData,
-    private OAuth2: OAuth2Service
+    private OAuth2: OAuth2Service,
+    private um: UserManagementService
   ) {
     this.matIconRegistry.addSvgIcon(
       'google-logo',
@@ -37,9 +39,15 @@ export class LoginDialogComponent implements OnInit {
 
   login(type: 'google' | 'github') {
     if (type === 'google') {
-      this.OAuth2.googleOAuth(this.parentData.closeDialog);
+      this.OAuth2.googleOAuth(() => {
+        this.um.initSync();
+        this.parentData.closeDialog();
+      });
     } else if (type === 'github') {
-      this.OAuth2.githubOAuth(this.parentData.closeDialog);
+      this.OAuth2.githubOAuth(() => {
+        this.um.initSync();
+        this.parentData.closeDialog();
+      });
     }
   }
 }

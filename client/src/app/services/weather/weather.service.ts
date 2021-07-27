@@ -7,7 +7,7 @@ import { environment as env } from 'src/environments/environment';
 })
 export class WeatherService {
   constructor(private http: HttpClient) { }
-  getCurrentWeatherByZipCode(zipCode: number) {
+  getCurrentWeatherByZipCode(zipCode: number | string) {
     return this.http.get(env.weatherApiEndpoint + zipCode).toPromise() as Promise<any>
   }
 }

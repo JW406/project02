@@ -67,6 +67,12 @@ public class RestUtilController {
     return pokeItemDao.findAll();
   }
 
+  @GetMapping("/api/get-user-info")
+  public User getUserInfo(@RequestHeader HttpHeaders headers) {
+    String email = tokenManager.getUsernameFromHeader(headers);
+    return userDao.findByEmail(email);
+  }
+
   @PostMapping("/api/shop/make-transaction")
   public Map<Object, Object> makeTransaction(@RequestBody MakeTransactionBody body, @RequestHeader HttpHeaders headers) {
     String email = tokenManager.getUsernameFromHeader(headers);
