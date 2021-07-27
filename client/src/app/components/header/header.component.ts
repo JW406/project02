@@ -55,7 +55,7 @@ export class HeaderComponent implements OnInit {
       )
       .subscribe((d: any) => {
         this.ls.isWait = false;
-        if (d['isSuccess']) {
+        if (d['success']) {
           this.refreshToken();
           this.notificationService.listOfNotifications = [
             {

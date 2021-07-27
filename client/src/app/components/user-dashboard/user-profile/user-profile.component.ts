@@ -37,7 +37,7 @@ export class UserProfileComponent implements OnInit {
         zipCode: this.zipCode,
       })
       .subscribe((d: any) => {
-        if (d['isSuccess']) {
+        if (d['success']) {
           this.um.initSync();
           this.mb.show('User Information update successful');
         }
