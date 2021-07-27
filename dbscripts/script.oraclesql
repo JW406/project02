@@ -1,6 +1,7 @@
 select t.table_name,t.num_rows from user_tables t where t.table_name like 'PROJ02_%';
 
-select * from PROJ02_POKEMONITEM;
+select * from PROJ02_POKEMONITEM where id < 10;
 select * from PROJ02_POKE_TRANSACTION;
 select * from PROJ02_TOKEN_TX_LOG;
 select * from PROJ02_USER;
+select * from PROJ02_POKEDEX;

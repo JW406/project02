@@ -6,6 +6,7 @@ import { MessageBoxService } from 'src/app/services/message-box/message-box.serv
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
 import { UserManagementService } from 'src/app/services/user-management/user-management.service';
+import { WeatherService } from 'src/app/services/weather/weather.service';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,11 @@ import { UserManagementService } from 'src/app/services/user-management/user-man
 export class HeaderComponent implements OnInit {
   @Input() openDialog!: () => void;
 
+  userLocation = {
+    name: '',
+    region: '',
+    temperatureF: 0,
+  }
   currentCoins = 0;
   constructor(
     public um: UserManagementService,
@@ -23,10 +29,16 @@ export class HeaderComponent implements OnInit {
     public cs: CartService,
     private mb: MessageBoxService,
     private ps: PokemonService,
-    private ls: LoadingSpinnerService
+    private ls: LoadingSpinnerService,
+    private ws: WeatherService,
   ) {}
 
-  ngOnInit(): void {}
+  async ngOnInit() {
+    const res = await this.ws.getCurrentWeatherByZipCode(33065)
+    this.userLocation.temperatureF = res.current.temp_f
+    this.userLocation.name = res.location.name
+    this.userLocation.region = res.location.region
+  }
 
   async refreshToken() {
     const res = await this.ps.getCurrentPokeToken();

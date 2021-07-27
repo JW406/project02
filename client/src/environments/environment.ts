@@ -17,6 +17,7 @@ export const environment = {
   githubClientID: '133547b73d6187c38434',
   stripeClientID:
     'pk_test_51JFjfADZSGMdHcapWzzZc7J0pzKeCKoGwSEJu32PXdKODASCpHtAjn8DknNMtqyCOrgbKflper35eyVZt7ZgTqLZ00sRkRDIp7',
+  weatherApiEndpoint: 'http://api.weatherapi.com/v1/current.json?key=a47a566ef8ef49f19ad10933212707&aqi=no&q=',
 };
 
 /*
