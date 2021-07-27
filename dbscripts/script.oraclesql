@@ -5,3 +5,5 @@ select * from PROJ02_POKE_TRANSACTION;
 select * from PROJ02_TOKEN_TX_LOG;
 select * from PROJ02_USER;
 select * from PROJ02_POKEDEX;
+
+delete PROJ02_USER where email like 'hello@world%'

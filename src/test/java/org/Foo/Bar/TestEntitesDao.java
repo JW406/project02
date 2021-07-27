@@ -41,19 +41,6 @@ public class TestEntitesDao {
   @Autowired
   private TokenTxLogDao tokenTxLogDao;
 
-  private User newUser() {
-    User user = new User();
-    user.setEmail("hello@world.com" + new Random().nextInt(5555) + 9999);
-    user.setName("bar");
-    user.setPokeToken(1000L);
-    user = userDao.save(user);
-    return user;
-  }
-
-  private void deleteUser(User user) {
-    userDao.deleteById(user.getId());
-  }
-
   @Test
   public void testGetBean() {
     Object res = SpringContextAccessor.getBean("dataSource");
@@ -94,20 +81,20 @@ public class TestEntitesDao {
     userService.persistUser(user);
     User foundUser = userDao.findByEmail(user.getEmail());
     assertNotNull(foundUser);
-    deleteUser(foundUser);
+    TestUtils.deleteUser(userDao, foundUser);
     foundUser = userDao.findByEmail(user.getEmail());
     assertNull(foundUser);
   }
 
   @Test
   public void testCreditTokensToUser() {
-    User user = newUser();
+    User user = TestUtils.newUser(userDao);
     Long amntToCredit = 222L;
     Long pokeTokenBefore = user.getPokeToken();
     userDao.updateUserTokenByDelta(amntToCredit, user.getEmail());
     User u = userDao.findByEmail(user.getEmail());
     assertEquals(u.getPokeToken(), pokeTokenBefore + amntToCredit);
-    deleteUser(user);
+    TestUtils.deleteUser(userDao, user);
     assertNull(userDao.findByEmail(user.getEmail()));
   }
 
@@ -122,7 +109,7 @@ public class TestEntitesDao {
 
   @Test
   public void testTransaction() {
-    User user = newUser();
+    User user = TestUtils.newUser(userDao);
 
     Long pokeTokenBefore = user.getPokeToken();
     PokeTransaction tx = new PokeTransaction();
@@ -133,12 +120,12 @@ public class TestEntitesDao {
     assertEquals(pokeTokenBefore - tx.getPokeTokenExchanged(), user.getPokeToken());
 
     tokenTxLogDao.deleteById(txLog.getId());
-    deleteUser(user);
+    TestUtils.deleteUser(userDao, user);
   }
 
   @Test
   public void testTransactionOverdraft() {
-    final User user = newUser();
+    final User user = TestUtils.newUser(userDao);
 
     Long pokeTokenBefore = user.getPokeToken();
     PokeTransaction tx = new PokeTransaction();
@@ -149,12 +136,12 @@ public class TestEntitesDao {
     });
     User userRefetch = userDao.findByEmail(user.getEmail());
     assertEquals(pokeTokenBefore, userRefetch.getPokeToken());
-    deleteUser(userRefetch);
+    TestUtils.deleteUser(userDao, userRefetch);
   }
 
   @Test
   public void testUpdateUserNameAndZipCode() {
-    User user = newUser();
+    User user = TestUtils.newUser(userDao);
 
     String newName = "Foobar";
     String newZipCode = "33065";
@@ -165,6 +152,6 @@ public class TestEntitesDao {
     assertEquals(newName, user.getName());
     assertEquals(newZipCode, user.getZipCode());
 
-    deleteUser(user);
+    TestUtils.deleteUser(userDao, user);
   }
 }

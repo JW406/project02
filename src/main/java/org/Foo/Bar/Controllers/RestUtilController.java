@@ -11,9 +11,9 @@ import org.Foo.Bar.EntitiesDao.PokeItemDao;
 import org.Foo.Bar.EntitiesDao.UserDao;
 import org.Foo.Bar.RestObjects.MakeTransactionBody;
 import org.Foo.Bar.RestObjects.UpdateUserInfo;
+import org.Foo.Bar.RestObjects.SuccessResponse;
 import org.Foo.Bar.Security.TokenManager;
 import org.Foo.Bar.Services.TransactionService;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -36,21 +36,6 @@ public class RestUtilController {
   private TokenManager tokenManager;
   @Autowired
   private TransactionService transactionService;
-
-  @GetMapping("/api/foo")
-  public Map<Object, Object> hello() {
-    Session sess = sessionFactory.openSession();
-    Map<Object, Object> a = new HashMap<>();
-
-    List<User> list = sess.createQuery("select u from User u").list();
-    for (int i = 0; i < list.size(); i++) {
-      User u = list.get(i);
-      a.put(u.getEmail(), u.getName());
-    }
-
-    sess.close();
-    return a;
-  }
 
   @GetMapping("/api/user/tokens")
   public Map<Object, Object> userTokenQuery(@RequestHeader HttpHeaders headers) {
@@ -76,29 +61,27 @@ public class RestUtilController {
   }
 
   @PatchMapping("/api/update-user-info")
-  public Map<Object, Object> updateUserInfo(@RequestHeader HttpHeaders headers, @RequestBody UpdateUserInfo body) {
+  public SuccessResponse updateUserInfo(@RequestHeader HttpHeaders headers, @RequestBody UpdateUserInfo body) {
     String email = tokenManager.getUsernameFromHeader(headers);
     userDao.updateUserNameAndZipCode(email, body.getName(), body.getZipCode());
-    return new HashMap<Object, Object>() {
-      {
-        put("isSuccess", true);
-      }
-    };
+    SuccessResponse successResponse = new SuccessResponse();
+    successResponse.setSuccess(true);
+    return successResponse;
   }
 
   @PostMapping("/api/shop/make-transaction")
-  public Map<Object, Object> makeTransaction(@RequestBody MakeTransactionBody body, @RequestHeader HttpHeaders headers) {
+  public SuccessResponse makeTransaction(@RequestBody MakeTransactionBody body, @RequestHeader HttpHeaders headers) {
     String email = tokenManager.getUsernameFromHeader(headers);
     PokeTransaction tx = new PokeTransaction();
     tx.setPokeTokenExchanged(body.getTxAmnt());
     tx.setTxSourceType(TxType.Order);
-    Map<Object, Object> res = new HashMap<>();
+    SuccessResponse successResponse = new SuccessResponse();
     try {
       transactionService.triggerTransaction(tx, email);
-      res.put("isSuccess", true);
+      successResponse.setSuccess(true);
     } catch (Exception e) {
-      res.put("isSuccess", false);
+      successResponse.setSuccess(false);
     }
-    return res;
+    return successResponse;
   }
 }
