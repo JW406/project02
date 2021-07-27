@@ -56,7 +56,7 @@ public class PaymentController {
   @PostMapping("/pay/create-checkout-session")
   public String checkOut(HttpServletRequest req, @ModelAttribute CheckoutModel param) throws StripeException {
     Stripe.apiKey = SpringContextAccessor.stripeClientSecret;
-    String baseUrl = http.normalizeRemoteHost(req);
+    String baseUrl = http.normalizeRemoteHost(req.getScheme(), req.getRemoteHost(), req.getServerPort());
     LineItem item = SessionCreateParams.LineItem.builder() //
         .setQuantity(param.getQuantities()) //
         .setPriceData( //

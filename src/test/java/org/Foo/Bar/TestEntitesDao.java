@@ -5,7 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import org.Foo.Bar.Entities.PokeTransaction;
 import org.Foo.Bar.Entities.PokemonItem;
@@ -18,6 +22,8 @@ import org.Foo.Bar.EntitiesDao.UserDao;
 import org.Foo.Bar.Exceptions.InsufficentTokenException;
 import org.Foo.Bar.Services.TransactionService;
 import org.Foo.Bar.Services.UserService;
+import org.Foo.Bar.UtilityServices.HTTPUtils;
+import org.Foo.Bar.UtilityServices.QueryStringParser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
@@ -49,8 +55,43 @@ public class TestEntitesDao {
   }
 
   @Test
+  public void testGetBean() {
+    Object res = SpringContextAccessor.getBean("dataSource");
+    assertNotNull(res);
+    ComboPooledDataSource res2 = SpringContextAccessor.getBean("dataSource", ComboPooledDataSource.class);
+    assertNotNull(res2);
+  }
+
+  @Autowired
+  private HTTPUtils http;
+
+  @Test
+  public void testHttpUtils() {
+    assertEquals(http.normalizeRemoteHost("http", "127.0.0.1", 8080), "http://localhost:8080");
+    String qs = http.encodeQueryString(new TreeMap<String, String>() {
+      {
+        put("abc", "bar");
+        put("qwf", "foo");
+      }
+    });
+    assertEquals(qs, "abc=bar&qwf=foo");
+  }
+
+  @Autowired
+  private QueryStringParser qsParser;
+
+  @Test
+  public void testQsParser() {
+    Map<String, String> res = qsParser.parse("abc=qwf&luy=nei");
+    assertEquals(res.get("abc"), "qwf");
+    assertEquals(res.get("luy"), "nei");
+  }
+
+  @Test
   public void testPersistUser() {
-    User user = newUser();
+    User user = new User();
+    user.setEmail("hello@world.com" + new Random().nextInt(5555) + 19999);
+    userService.persistUser(user);
     User foundUser = userDao.findByEmail(user.getEmail());
     assertNotNull(foundUser);
     deleteUser(foundUser);

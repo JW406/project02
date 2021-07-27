@@ -1,7 +1,6 @@
 package org.Foo.Bar.Security;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;

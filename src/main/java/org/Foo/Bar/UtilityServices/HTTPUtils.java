@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Service;
 
 import okhttp3.Headers;
@@ -34,16 +32,14 @@ public class HTTPUtils {
   }
 
   public String encodeQueryString(Map<String, String> in) {
-    String res = "";
+    StringBuilder sb = new StringBuilder();
     for (Map.Entry<String, String> e : in.entrySet()) {
-      res += "&" + e.getKey() + "=" + e.getValue();
+      sb.append("&" + e.getKey() + "=" + e.getValue());
     }
-    res = res.substring(1);
-    return res;
+    return sb.substring(1);
   }
 
-  public String normalizeRemoteHost(HttpServletRequest req) {
-    return req.getScheme() + "://" + (req.getRemoteHost().equals("127.0.0.1") ? "localhost" : req.getRemoteHost()) + ":"
-        + req.getServerPort();
+  public String normalizeRemoteHost(String scheme, String remoteHost, int serverPort) {
+    return scheme + "://" + (remoteHost.equals("127.0.0.1") ? "localhost" : remoteHost) + ":" + serverPort;
   }
 }
