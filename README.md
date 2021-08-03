@@ -35,6 +35,7 @@ To-do list:
 
 ```bash
   $ git clone https://github.com/JW406/Pokemon-Shop.git
+  $ cd Pokemon-Shop/client && yarn && yarn ng serve
   $ export rds_url=YOUR_RDS_URL
   $ export rds_username=YOUR_RDS_USERNAME
   $ export rds_pwd=YOUR_RDS_PWD
@@ -44,13 +45,20 @@ To-do list:
   $ export proj02_github_client_secret=YOUR_ID/SECERT
   $ export proj02_stripe_client_id=YOUR_ID/SECERT
   $ export proj02_stripe_client_secret=YOUR_ID/SECERT
-  $ cd Pokemon-Shop
+  $ cd ../
   $ mvn package -f ./pom.xml && mv target/*.war target/ROOT.war
   $ unzip ./target/ROOT.war -d $CATALINA_BASE/webapps/ROOT
   $ sh $CATALINA_BASE/bin/startup.sh
 ```
 
 ## Usage
+![image](https://i.ibb.co/5rZmCJz/project02-01.png)
+![image](https://i.ibb.co/1b9HVCd/project02-02.png)
+![image](https://i.ibb.co/H2N0WQf/project02-03.png)
+![image](https://i.ibb.co/HGw9Lbv/project02-04.png)
+![image](https://i.ibb.co/xzjVmYw/project02-05.png)
+![image](https://i.ibb.co/Nm9VzJ9/project02-06.png)
+![image](https://i.ibb.co/M87BQB1/project02-07.png)
 
 ## Contributors
 
